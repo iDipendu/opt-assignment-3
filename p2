@@ -1,0 +1,56 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Replace this with your actual data
+# Example: 2D feature vectors and binary labels (yi in {-1, 1})
+X = np.array([
+    [1, 2],
+    [1, 3],
+    [1, 4],
+    [1, 5],
+    [1, 6]
+])
+y = np.array([1, -1, 1, -1, 1])  # Binary labels as {-1, 1}
+
+# Sigmoid function
+def sigmoid(z):
+    return 1 / (1 + np.exp(-z))
+
+# Objective function
+def f(beta):
+    return np.sum(np.log(1 + np.exp(-y * (X @ beta))))
+
+# Gradient
+def grad_f(beta):
+    z = y * (X @ beta)
+    return -np.sum((y[:, np.newaxis] * X) * (1 - sigmoid(z))[:, np.newaxis], axis=0)
+
+# Parameters
+beta = np.array([0.0, 0.0])  # Initial point
+eta = 0.05
+epsilon = 1e-5
+max_iter = 10000
+
+# Gradient Descent
+loss_history = []
+for i in range(max_iter):
+    grad = grad_f(beta)
+    loss = f(beta)
+    loss_history.append(loss)
+
+    if np.linalg.norm(grad) < epsilon:
+        break
+    beta -= eta * grad
+
+# Results
+print(f"Final β: {beta}")
+print(f"Iterations: {i + 1}")
+print(f"Final loss: {loss}")
+
+# Plot
+plt.plot(loss_history)
+plt.xlabel('Iterations')
+plt.ylabel('Loss')
+plt.title('Gradient Descent Convergence for Logistic Regression')
+plt.grid(True)
+plt.show()
