@@ -22,4 +22,32 @@ epsilon = 1e-5
 max_iter = 10000
 
 loss_history = []
-trajectory = [(mu, sigma]()
+trajectory = [(mu, sigma)]
+
+# Gradient Descent Loop
+for i in range(max_iter):
+    grad = grad_f(mu, sigma)
+    loss = f(mu, sigma)
+    loss_history.append(loss)
+
+    if np.linalg.norm(grad) < epsilon:
+        break
+
+    mu -= eta * grad[0]
+    sigma -= eta * grad[1]
+    sigma = max(sigma, 1e-6)  # Ensure sigma stays positive
+    trajectory.append((mu, sigma))
+
+# Results
+print(f"Final µ: {mu}")
+print(f"Final σ: {sigma}")
+print(f"Iterations: {i + 1}")
+print(f"Final loss: {loss}")
+
+# Plot: Loss vs Iterations
+plt.plot(loss_history)
+plt.xlabel("Iterations")
+plt.ylabel("Negative Log-Likelihood")
+plt.title("Convergence of Gradient Descent (MLE for Normal Distribution)")
+plt.grid(True)
+plt.show()
