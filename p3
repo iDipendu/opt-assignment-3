@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Define A and b
+A = np.array([[2, 0], [0, 4]])
+b = np.array([-4, -8])
+
+# Objective function
+def f(x):
+    return x.T @ A @ x + b.T @ x
+
+# Gradient
+def grad_f(x):
+    return 2 * A @ x + b
+
+# Parameters
+x = np.array([1.0, 1.0])  # Initial point
+eta = 0.1
+epsilon = 1e-6
+max_iter = 10000
+
+# Gradient descent loop
+loss_history = []
+trajectory = [x.copy()]
+
+for i in range(max_iter):
+    grad = grad_f(x)
+    loss = f(x)
+    loss_history.append(loss)
+
+    if np.linalg.norm(grad) < epsilon:
+        break
+    x -= eta * grad
+    trajectory.append(x.copy())
+
+# Results
+print(f"Final x: {x}")
+print(f"Iterations: {i + 1}")
+print(f"Final loss: {loss}")
+
+# Plot: Loss vs Iterations
+plt.figure()
+plt.plot(loss_history)
+plt.xlabel("Iterations")
+plt.ylabel("Loss")
+plt.title("Convergence of Gradient Descent (Quadratic Function)")
+plt.grid(True)
+plt.show
