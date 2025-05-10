@@ -1,0 +1,51 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Set random seed for reproducibility
+np.random.seed(0)
+
+# Generate data
+n = 100
+x = np.random.normal(1, 2, size=(n, 1))
+X = np.hstack([np.ones_like(x), x])  # Add bias term
+beta_true = np.array([2, 3])
+y = np.random.normal(X @ beta_true, 5)
+
+# Objective function
+def f(beta):
+    residuals = y - X @ beta
+    return 0.5 / n * np.sum(residuals**2)
+
+# Gradient
+def grad_f(beta):
+    return -1/n * X.T @ (y - X @ beta)
+
+# Gradient descent parameters
+beta = np.array([0.0, 0.0])
+eta = 0.01
+epsilon = 1e-6
+max_iter = 10000
+
+# Gradient Descent Loop
+loss_history = []
+for i in range(max_iter):
+    grad = grad_f(beta)
+    loss = f(beta)
+    loss_history.append(loss)
+    
+    if np.linalg.norm(grad) < epsilon:
+        break
+    beta -= eta * grad
+
+# Results
+print(f"Final β: {beta}")
+print(f"Iterations: {i + 1}")
+print(f"Final loss: {loss}")
+
+# Plot
+plt.plot(loss_history)
+plt.xlabel('Iterations')
+plt.ylabel('Loss')
+plt.title('Gradient Descent Convergence for Linear Regression')
+plt.grid(True)
+plt.show()
